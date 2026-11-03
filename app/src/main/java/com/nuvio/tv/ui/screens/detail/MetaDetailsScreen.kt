@@ -414,6 +414,7 @@ fun MetaDetailsScreen(
     heroBackdropUrl: String? = null,
     playOnLoad: Boolean = false,
     playOnLoadManually: Boolean = false,
+    playTrailerOnLoad: Boolean = false,
     onBackPress: () -> Unit,
     onReturnFocusConsumed: () -> Unit = {},
     onNavigateToCastDetail: (personId: Int, personName: String, preferCrew: Boolean) -> Unit = { _, _, _ -> },
@@ -480,10 +481,17 @@ fun MetaDetailsScreen(
     var restoreSharedTrailerFocusToken by rememberSaveable { mutableIntStateOf(0) }
     var isTrailerPaused by remember { mutableStateOf(false) }
     val playOnLoadConsumed = rememberSaveable { mutableStateOf(false) }
+    val playTrailerOnLoadConsumed = rememberSaveable { mutableStateOf(false) }
     val playOnLoadHandoffDispatched = rememberSaveable { mutableStateOf(false) }
     val playOnLoadReturnObserved = rememberSaveable { mutableStateOf(false) }
     val suppressInitialPlayOnLoadContent = playOnLoad && !playOnLoadReturnObserved.value
     val playOnLoadReturnContentReady = !uiState.isLoading && uiState.meta != null
+    LaunchedEffect(playTrailerOnLoad, uiState.isLoading, uiState.meta?.id, uiState.trailerButtonEnabled, playTrailerOnLoadConsumed.value) {
+        if (playTrailerOnLoad && !playTrailerOnLoadConsumed.value && !uiState.isLoading && uiState.meta != null && uiState.trailerButtonEnabled) {
+            playTrailerOnLoadConsumed.value = true
+            viewModel.onEvent(MetaDetailsEvent.OnTrailerButtonClick)
+        }
+    }
     var playOnLoadReturnRevealRequested by remember(playOnLoad) { mutableStateOf(!playOnLoad) }
     var playOnLoadReturnContentRevealed by remember(playOnLoad) { mutableStateOf(!playOnLoad) }
 

@@ -52,6 +52,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import androidx.tv.material3.Button
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -304,6 +305,7 @@ internal fun HeroTitleBlock(
     mdbListShowOnHero: Boolean = false,
     mdbListRatingOrder: List<String> = com.nuvio.tv.domain.model.MDBListSettings.DEFAULT_RATING_ORDER,
     trailerPlaying: () -> Boolean = { false },
+    onPlayTrailer: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // The providers read hero state that is rewritten on every focus move, often with an equal
@@ -341,7 +343,8 @@ internal fun HeroTitleBlock(
             showImdbRatings = showImdbRatings,
             mdbListShowOnHero = mdbListShowOnHero,
             mdbListRatingOrder = mdbListRatingOrder,
-            trailerPlaying = trailerPlaying
+            trailerPlaying = trailerPlaying,
+            onPlayTrailer = onPlayTrailer
         )
     }
 }
@@ -353,7 +356,8 @@ private fun HeroTitleContent(
     showImdbRatings: Boolean,
     mdbListShowOnHero: Boolean = false,
     mdbListRatingOrder: List<String> = com.nuvio.tv.domain.model.MDBListSettings.DEFAULT_RATING_ORDER,
-    trailerPlaying: () -> Boolean = { false }
+    trailerPlaying: () -> Boolean = { false },
+    onPlayTrailer: () -> Unit = {}
 ) {
     val preview = previewProvider() ?: return
     val highlighterEnabled = LocalRecompositionHighlighterEnabled.current
@@ -429,6 +433,8 @@ private fun HeroTitleContent(
                 overflow = TextOverflow.Ellipsis
             )
         }
+
+        Button(onClick = onPlayTrailer) { Text("▶  Trailer") }
 
         val strStatusEnded = stringResource(if (preview.isSeries) R.string.series_status_ended else R.string.movie_status_ended)
         val strStatusContinuing = stringResource(if (preview.isSeries) R.string.series_status_continuing else R.string.movie_status_continuing)

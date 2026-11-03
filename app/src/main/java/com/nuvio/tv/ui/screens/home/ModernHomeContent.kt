@@ -127,6 +127,7 @@ fun ModernHomeContent(
     trailerPreviewUrls: Map<String, String> = emptyMap(),
     trailerPreviewAudioUrls: Map<String, String> = emptyMap(),
     onNavigateToDetail: (String, String, String) -> Unit,
+    onNavigateToTrailer: (String, String) -> Unit = { _, _ -> },
     onContinueWatchingClick: (ContinueWatchingItem) -> Unit,
     onContinueWatchingStartFromBeginning: (ContinueWatchingItem) -> Unit = {},
     onContinueWatchingPlayManually: (ContinueWatchingItem) -> Unit = {},
@@ -1148,6 +1149,11 @@ fun ModernHomeContent(
                     else {
                         val state = heroSceneStateLambda()
                         state.fullScreenBackdrop && shouldPlayTrailerLambda() && heroTrailerRenderedLambda()
+                    }
+                },
+                onPlayTrailer = {
+                    activeRowState.value?.items?.getOrNull(clampedActiveItemIndexState.value)?.metaPreview?.let { item ->
+                        onNavigateToTrailer(item.id, item.apiType)
                     }
                 },
                 modifier = heroMetadataModifier
