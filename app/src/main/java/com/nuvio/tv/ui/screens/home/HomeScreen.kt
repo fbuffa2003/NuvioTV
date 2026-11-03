@@ -79,6 +79,7 @@ private const val HOME_STABLE_GATE_TIMEOUT_MS = 5_000L
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onNavigateToDetail: (String, String, String) -> Unit,
+    onNavigateToTrailer: (String, String) -> Unit = { id, type -> onNavigateToDetail(id, type, "") },
     onContinueWatchingClick: (ContinueWatchingItem) -> Unit = { item ->
         onNavigateToDetail(
             when (item) {
@@ -545,6 +546,7 @@ private fun ClassicHomeRoute(
         trailerPreviewUrls = viewModel.trailerPreviewUrls,
         trailerPreviewAudioUrls = viewModel.trailerPreviewAudioUrls,
         onNavigateToDetail = onNavigateToDetail,
+        onNavigateToTrailer = onNavigateToTrailer,
         onContinueWatchingClick = onContinueWatchingClick,
         onContinueWatchingStartFromBeginning = onContinueWatchingStartFromBeginning,
         onContinueWatchingPlayManually = onContinueWatchingPlayManually,

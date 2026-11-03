@@ -256,6 +256,11 @@ private fun PlaybackNavHost(
                         )
                     )
                 },
+                onNavigateToTrailer = { itemId, itemType ->
+                    navController.navigate(
+                        Screen.Detail.createRoute(itemId, itemType, playTrailerOnLoad = true)
+                    )
+                },
                 onContinueWatchingClick = onContinueWatchingClick@{ item ->
                     if (!playbackAvailability.canStream(item)) {
                         Toast.makeText(context, R.string.playback_unavailable_message, Toast.LENGTH_SHORT).show()
@@ -329,6 +334,11 @@ private fun PlaybackNavHost(
                     type = NavType.StringType
                     nullable = true
                     defaultValue = "false"
+                },
+                navArgument("playTrailerOnLoad") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = "false"
                 }
             )
         ) { backStackEntry ->
@@ -353,6 +363,7 @@ private fun PlaybackNavHost(
             val heroBackdropUrl = detailArgs?.getString("heroBackdropUrl")?.takeIf { it.isNotBlank() }
             val playOnLoad = detailArgs?.getString("playOnLoad")?.toBooleanStrictOrNull() == true
             val manualSelection = detailArgs?.getString("manualSelection")?.toBooleanStrictOrNull() == true
+            val playTrailerOnLoad = detailArgs?.getString("playTrailerOnLoad")?.toBooleanStrictOrNull() == true
             DetailChildHost(parentNavController = navController) { childNav ->
             MetaDetailsScreen(
                 returnFocusSeason = returnFocusSeason,
@@ -361,6 +372,7 @@ private fun PlaybackNavHost(
                 heroBackdropUrl = heroBackdropUrl,
                 playOnLoad = playOnLoad,
                 playOnLoadManually = manualSelection,
+                playTrailerOnLoad = playTrailerOnLoad,
                 onReturnFocusConsumed = {
                     savedState["returnFocusSeason"] = null
                     savedState["returnFocusEpisode"] = null
